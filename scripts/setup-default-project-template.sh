@@ -122,8 +122,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Get script directory and project root
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+SCRIPT_DIR="$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" && pwd)"
+PROJECT_ROOT="$(dirname \"$SCRIPT_DIR\")"
 
 print_header() {
     echo -e "\n${BLUE}=== $1 ===${NC}"
@@ -143,6 +143,23 @@ print_error() {
 
 print_info() {
     echo -e "${BLUE}ℹ️  $1${NC}"
+}
+
+# Helper to update submodule using GITHUB_PAT if available
+update_submodule_with_pat() {
+    local wiki_url
+    wiki_url=$(git config --file .gitmodules submodule.wiki.url)
+    if [[ -z "$GITHUB_PAT" ]]; then
+        print_error "GITHUB_PAT not set. Cannot update wiki submodule with PAT."
+        exit 1
+    fi
+    # Rewrite URL to use PAT
+    local pat_url
+    pat_url="https://${GITHUB_PAT}@${wiki_url#https://}"
+    print_info "Reconfiguring wiki submodule to use GITHUB_PAT..."
+    git config submodule.wiki.url "$pat_url"
+    git submodule sync wiki
+    git submodule update --remote wiki
 }
 
 # Check if wiki submodule exists
@@ -176,7 +193,10 @@ fi
 
 # Update submodule to latest remote version
 print_info "Fetching latest wiki changes..."
-git submodule update --remote wiki
+if ! git submodule update --remote wiki; then
+    print_warning "Wiki submodule update failed. Attempting with GITHUB_PAT if available..."
+    update_submodule_with_pat
+fi
 
 # Check if there are updates to commit
 if [[ -n "$(git status --porcelain wiki)" ]]; then
