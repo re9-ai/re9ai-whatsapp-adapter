@@ -18,3 +18,7 @@ Thumbs.db
 # Wiki submodule (ignore local changes)
 wiki/*
 !wiki/.gitkeep
+
+# Wiki submodule - ignore local changes
+wiki/*
+!wiki/.gitkeep
