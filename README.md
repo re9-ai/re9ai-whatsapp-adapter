@@ -1,3 +1,14 @@
+## 📚 Documentation & Wiki
+
+This repository includes a comprehensive wiki submodule containing architectural and business documentation:
+
+- **📖 Wiki Access**: The `wiki/` directory contains extensive documentation
+- **🔄 Wiki Sync**: Use `./scripts/update-wiki.sh` to sync latest wiki changes
+- **📋 Wiki Guide**: See [WIKI.md](WIKI.md) for detailed wiki management instructions
+
+⚠️ **Important**: The wiki is read-only in this repository. Edit content through GitHub's wiki interface, then sync locally using the provided script.
+
+
 
 # re9.ai Project Template
 
