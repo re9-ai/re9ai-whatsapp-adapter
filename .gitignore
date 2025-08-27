@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -43,3 +44,29 @@ logs/
 # Temporary files
 tmp/
 temp/
+=======
+# Basic .gitignore for re9.ai template repositories
+
+# Node modules
+node_modules/
+
+# Python virtual environments
+venv/
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Wiki submodule (ignore local changes)
+wiki/*
+!wiki/.gitkeep
+
+# Wiki submodule - ignore local changes
+wiki/*
+!wiki/.gitkeep
+>>>>>>> 811635edb07e5f2f8f096b80838adf2ddfa179f4
