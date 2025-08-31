@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whatsapp-adapter
+  labels:
+    app: whatsapp-adapter
+    component: backend
+    service: messaging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whatsapp-adapter
+  template:
+    metadata:
+      labels:
+        app: whatsapp-adapter
+        component: backend
+        service: messaging
+    spec:
+      containers:
+      - name: whatsapp-adapter
+        image: ghcr.io/re9-ai/re9ai-whatsapp-adapter:latest
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 8081
+          name: health
+        env:
+        - name: PORT
+          value: "8080"
+        - name: HEALTH_PORT
+          value: "8081"
+        - name: TWILIO_ACCOUNT_SID
+          valueFrom:
+            secretKeyRef:
+              name: whatsapp-adapter-secrets
+              key: twilio-account-sid
+        - name: TWILIO_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: whatsapp-adapter-secrets
+              key: twilio-auth-token
+        - name: TWILIO_PHONE_NUMBER
+          valueFrom:
+            secretKeyRef:
+              name: whatsapp-adapter-secrets
+              key: twilio-phone-number
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: whatsapp-adapter-secrets
+              key: database-url
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: whatsapp-adapter-config
+              key: redis-url
+        - name: AWS_S3_BUCKET
+          valueFrom:
+            configMapKeyRef:
+              name: whatsapp-adapter-config
+              key: s3-bucket
+        - name: AWS_REGION
+          valueFrom:
+            configMapKeyRef:
+              name: whatsapp-adapter-config
+              key: aws-region
+        - name: AI_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: whatsapp-adapter-config
+              key: ai-service-url
+        - name: CHAT_ORCHESTRATOR_URL
+          valueFrom:
+            configMapKeyRef:
+              name: whatsapp-adapter-config
+              key: chat-orchestrator-url
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: whatsapp-adapter-config
+              key: log-level
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8081
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+              - ALL
+      restartPolicy: Always

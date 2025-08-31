@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: whatsapp-adapter-config
+  labels:
+    app: whatsapp-adapter
+    component: backend
+    service: messaging
+data:
+  redis-url: "redis://redis-master:6379"
+  s3-bucket: "re9ai-media-dev"
+  aws-region: "us-east-1"
+  ai-service-url: "http://ai-processing:8080"
+  chat-orchestrator-url: "http://chat-orchestrator:8080"
+  log-level: "INFO"

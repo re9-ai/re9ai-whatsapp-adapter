@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: whatsapp-adapter
+  namespace: re9ai-local
+
+resources:
+- deployment.yaml
+- service.yaml
+- configmap.yaml
+- secrets.yaml
+- ingress.yaml
+
+commonLabels:
+  app: whatsapp-adapter
+  component: backend
+  service: messaging
+  managed-by: argocd
+
+namespace: re9ai-local
+
+images:
+- name: ghcr.io/re9-ai/re9ai-whatsapp-adapter
+  newTag: latest
