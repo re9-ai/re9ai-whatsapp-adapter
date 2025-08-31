@@ -194,7 +194,7 @@ func (h *WhatsAppHandler) SendMessage(c *gin.Context) {
 	outboundMessage := &models.WhatsAppMessage{
 		ID:        response.ID,
 		TwilioSID: response.TwilioSID,
-		From:      h.whatsappService.fromNumber,
+		From:      h.whatsappService.GetFromNumber(),
 		To:        request.To,
 		Direction: models.MessageDirectionOutbound,
 		Type:      request.Type,

@@ -268,6 +268,11 @@ func (w *WhatsAppService) GetMessageStatus(ctx context.Context, messageSID strin
 	return status, nil
 }
 
+// GetFromNumber returns the configured WhatsApp from number
+func (w *WhatsAppService) GetFromNumber() string {
+	return w.fromNumber
+}
+
 // Helper methods
 
 // formatWhatsAppNumber ensures the phone number has the proper WhatsApp prefix
