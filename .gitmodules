@@ -1,5 +1,0 @@
-[submodule "wiki"]
-	path = wiki
-	url = https://github.com/re9-ai/wiki.git
-	branch = main
-	ignore = dirty
